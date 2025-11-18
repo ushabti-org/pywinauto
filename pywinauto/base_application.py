@@ -772,11 +772,16 @@ class WindowSpecification(object):
                 class_name = ctrl.class_name()
                 auto_id = None
                 control_type = None
+                control_id = None
                 if hasattr(ctrl.element_info, 'automation_id'):
                     auto_id = ctrl.element_info.automation_id
                 if hasattr(ctrl.element_info, 'control_type'):
                     control_type = ctrl.element_info.control_type
+                if hasattr(ctrl.element_info, 'control_id'):
+                    control_id = ctrl.element_info.control_id
                 criteria_texts = []
+                if control_id:
+                    criteria_texts.append(u'control_id={}'.format(control_id))
                 if ctrl_text:
                     criteria_texts.append(u'name={}'.format(ctrl_text))
                 if class_name:
