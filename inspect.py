@@ -13,7 +13,6 @@
 
 import sys
 from pywinauto.application import Application
-from pywinauto.findwindows import ElementNotFoundError, WindowAmbiguousError
 
 
 def inspect(window_title):
@@ -27,25 +26,20 @@ def inspect(window_title):
         print("==" * 20)
         print("Connected to application with window title: '{}'".format(window_title))
         print("Process ID: {}".format(app.process))
-        print("Windows of this application:", app.windows())
+        print("==" * 20)
+        windows = app.windows()
+        print("Please select the window you want to inspect:")
+        for i, window in enumerate(windows):
+            print(f"{i}: {window.window_text()}")
+        selected_window_index = int(input("Enter the number of the window you want to inspect: "))
+        selected_window = windows[selected_window_index]
+        print("Selected window: '{}'".format(selected_window.window_text()))
+        print("==" * 20)
+        selected_window.print_control_identifiers()
         print("==" * 20)
         
-        # Get the top window (main window) and print its control identifiers
-        main_window = app.top_window()
-        print("Control identifiers for window: '{}'".format(window_title))
-        print("==" * 20)
-        main_window.print_control_identifiers()
-        print("==" * 20)
-        
-    except ElementNotFoundError:
-        print("Error: No window found with title '{}'".format(window_title), file=sys.stderr)
-        sys.exit(1)
-    except WindowAmbiguousError:
-        print("Error: Multiple windows found with title '{}'".format(window_title), file=sys.stderr)
-        print("Please use a more specific window title.", file=sys.stderr)
-        sys.exit(1)
     except Exception as e:
-        print("Error: Failed to connect to application: {}".format(e), file=sys.stderr)
+        print(f"Error: Failed to connect to application: {e}")
         sys.exit(1)
 
 
