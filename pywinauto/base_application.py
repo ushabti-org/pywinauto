@@ -782,6 +782,8 @@ class WindowSpecification(object):
                 criteria_texts = []
                 if control_id:
                     criteria_texts.append(u'control_id={}'.format(control_id))
+                else:
+                    criteria_texts.append(u'control_id=None')
                 if ctrl_text:
                     criteria_texts.append(u'name={}'.format(ctrl_text))
                 if class_name:
