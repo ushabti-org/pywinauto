@@ -770,11 +770,14 @@ class WindowSpecification(object):
                     output += u'\n' + indent + u'{}'.format(ctrl_id_name_map[ctrl_id])
 
                 class_name = ctrl.class_name()
-                auto_id = None
+                automation_id = None
                 control_type = None
                 control_id = None
+                auto_id = None
+                if hasattr(ctrl.element_info, 'auto_id'):
+                    auto_id = ctrl.element_info.auto_id
                 if hasattr(ctrl.element_info, 'automation_id'):
-                    auto_id = ctrl.element_info.automation_id
+                    automation_id = ctrl.element_info.automation_id
                 if hasattr(ctrl.element_info, 'control_type'):
                     control_type = ctrl.element_info.control_type
                 if hasattr(ctrl.element_info, 'control_id'):
@@ -784,15 +787,19 @@ class WindowSpecification(object):
                     criteria_texts.append(u'control_id={}'.format(control_id))
                 else:
                     criteria_texts.append(u'control_id=None')
+                if auto_id:
+                    criteria_texts.append(u'auto_id={}'.format(auto_id))
+                else:
+                    criteria_texts.append(u'auto_id=None')
                 if ctrl_text:
                     criteria_texts.append(u'name={}'.format(ctrl_text))
                 if class_name:
                     criteria_texts.append(u"class_name='{}'".format(class_name))
-                if auto_id:
-                    criteria_texts.append(u"auto_id='{}'".format(auto_id))
+                if automation_id:
+                    criteria_texts.append(u"secondary_id='{}'".format(automation_id))
                 if control_type:
                     criteria_texts.append(u"control_type='{}'".format(control_type))
-                if ctrl_text or class_name or auto_id:
+                if ctrl_text or class_name or automation_id or control_id or auto_id:
                     output += u'\n' + indent + u'.by(' + u', '.join(criteria_texts) + u')'
             else:
                 output += indent + u'**********\n'
