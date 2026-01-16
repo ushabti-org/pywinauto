@@ -13,14 +13,14 @@ pip install uv
 
 In the root of the project do the following:
 
-- install a 32-bit python version
+- install 64-bit python version
 ```
-uv python install cpython-3.13.11-windows-x86-none
+uv python install cpython-3.11.14-windows-x86_64-none
 ```
 
 - pin this version to the project locally:
 ```
- uv python pin cpython-3.13.11-windows-x86-none
+ uv python pin cpython-3.11.14-windows-x86_64-none
 ```
 
 - create a virtual environment
@@ -31,6 +31,7 @@ uv venv
 - install dependencies
 ```
 uv pip install -r dev-requirements.txt
+uv pip install comtypes==1.3.1
 ```
 
 ### Usage
@@ -38,4 +39,15 @@ to dump the UI tree of a particular window, make sure your application is open a
 
 ```
 uv run python inspect.py "<APPLICATION_WINDOW_TITLE>"
+```
+
+to log the output to a file
+
+```
+uv run python inspect.py "<APPLICATION_WINDOW_TITLE>" --output-file <FILE_PATH>
+```
+
+to specify a backend
+```
+uv run python inspect.py "<APPLICATION_WINDOW_TITLE>" --backend "win32"
 ```
