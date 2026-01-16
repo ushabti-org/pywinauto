@@ -21,9 +21,9 @@ import argparse
 from pywinauto.application import Application
 
 
-def inspect(window_title, output_file, max_depth, max_width):
+def inspect(window_title, output_file, engine, max_depth, max_width):
     """Connect to a running application by window title and print control identifiers"""
-    app = Application()
+    app = Application(backend=engine)
     
     try:
         # Connect to the application using the window title
@@ -31,6 +31,7 @@ def inspect(window_title, output_file, max_depth, max_width):
         
         print("==" * 20)
         print("Connected to application with window title: '{}'".format(window_title))
+        print("Engine: '{}'".format(engine))
         print("Process ID: {}".format(app.process))
         print("==" * 20)
         windows = app.windows()
@@ -65,6 +66,13 @@ if __name__ == '__main__':
         help='The file to save the output to'
     )
     parser.add_argument(
+        '--engine',
+        dest='engine',
+        default='uia',
+        choices=['win32', 'uia'],
+        help='The pywinauto engine used to inspect the window'
+    )
+    parser.add_argument(
         '--max-depth',
         dest='max_depth',
         type=int,
@@ -80,4 +88,4 @@ if __name__ == '__main__':
     )
 
     args = parser.parse_args()
-    inspect(args.window_title, args.output_file, args.max_depth, args.max_width)
+    inspect(args.window_title, args.output_file, args.engine, args.max_depth, args.max_width)
