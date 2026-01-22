@@ -1,0 +1,85 @@
+
+Basic User Input Modules
+========================
+.. toctree::
+   :maxdepth: 1
+   
+   pywinauto.mouse.txt
+   pywinauto.keyboard.txt
+
+Main User Modules
+=================
+.. toctree::
+   :maxdepth: 1
+   
+   pywinauto.application.txt
+   pywinauto.findbestmatch.txt
+   pywinauto.findwindows.txt
+   pywinauto.timings.txt
+
+Specific Functionality
+======================
+.. toctree::
+   :maxdepth: 1
+   
+   pywinauto.clipboard.txt
+   pywinauto.win32_hooks.txt
+
+
+Controls Reference
+==================
+.. toctree::
+   :maxdepth: 1
+   
+   pywinauto.base_wrapper.txt
+   pywinauto.controls.hwndwrapper.txt
+   pywinauto.controls.menuwrapper.txt
+   pywinauto.controls.common_controls.txt
+   pywinauto.controls.win32_controls.txt
+   
+   pywinauto.controls.uiawrapper.txt
+   pywinauto.controls.uia_controls.txt
+
+Pre-supplied Tests
+==================
+.. toctree::
+   :maxdepth: 1
+   
+   pywinauto.tests.allcontrols.txt
+   pywinauto.tests.asianhotkey.txt
+   pywinauto.tests.comboboxdroppedheight.txt
+   pywinauto.tests.comparetoreffont.txt
+   pywinauto.tests.leadtrailspaces.txt
+   pywinauto.tests.miscvalues.txt
+   pywinauto.tests.missalignment.txt
+   pywinauto.tests.missingextrastring.txt
+   pywinauto.tests.overlapping.txt
+   pywinauto.tests.repeatedhotkey.txt
+   pywinauto.tests.translation.txt
+   pywinauto.tests.truncation.txt
+
+Backend Internal Implementation modules
+=======================================
+.. toctree::
+   :maxdepth: 1
+   
+   pywinauto.backend.txt
+   pywinauto.element_info.txt
+
+   pywinauto.win32_element_info.txt
+
+   pywinauto.uia_element_info.txt
+   pywinauto.uia_defines.txt
+
+Internal Modules
+================
+.. toctree::
+   :maxdepth: 1
+   
+   pywinauto.controlproperties.txt
+   pywinauto.handleprops.txt
+   pywinauto.xml_helpers.txt
+   pywinauto.fuzzydict.txt
+   pywinauto.actionlogger.txt
+   pywinauto.sysinfo.txt
+   pywinauto.remote_memory_block.txt
