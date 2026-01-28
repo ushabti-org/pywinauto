@@ -788,7 +788,7 @@ class WindowSpecification(object):
                 else:
                     criteria_texts.append(u'control_id=None')
                 if auto_id:
-                    criteria_texts.append(u'auto_id={}'.format(auto_id))
+                    criteria_texts.append(u"auto_id='{}'".format(auto_id))
                 else:
                     criteria_texts.append(u'auto_id=None')
                 if ctrl_text:

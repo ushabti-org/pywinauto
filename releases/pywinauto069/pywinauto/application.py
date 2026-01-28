@@ -655,26 +655,39 @@ class WindowSpecification(object):
 
                 title = ctrl_text
                 class_name = ctrl.class_name()
-                auto_id = None
+                automation_id = None
                 control_type = None
+                control_id = None
+                auto_id = None
+                if hasattr(ctrl.element_info, 'auto_id'):
+                    auto_id = ctrl.element_info.auto_id
                 if hasattr(ctrl.element_info, 'automation_id'):
-                    auto_id = ctrl.element_info.automation_id
+                    automation_id = ctrl.element_info.automation_id
                 if hasattr(ctrl.element_info, 'control_type'):
                     control_type = ctrl.element_info.control_type
                     if control_type:
                         class_name = None  # no need for class_name if control_type exists
                     else:
                         control_type = None # if control_type is empty, still use class_name instead
+                if hasattr(ctrl.element_info, 'control_id'):
+                    control_id = ctrl.element_info.control_id
                 criteria_texts = []
+                auto_id_value = auto_id if auto_id is not None else automation_id
+                if control_id:
+                    criteria_texts.append(u'control_id={}'.format(control_id))
+                else:
+                    criteria_texts.append(u'control_id=None')
+                if auto_id_value:
+                    criteria_texts.append(u"auto_id='{}'".format(auto_id_value))
+                else:
+                    criteria_texts.append(u'auto_id=None')
                 if title:
                     criteria_texts.append(u'title="{}"'.format(title))
                 if class_name:
                     criteria_texts.append(u'class_name="{}"'.format(class_name))
-                if auto_id:
-                    criteria_texts.append(u'auto_id="{}"'.format(auto_id))
                 if control_type:
                     criteria_texts.append(u'control_type="{}"'.format(control_type))
-                if title or class_name or auto_id:
+                if title or class_name or auto_id_value or control_id:
                     output += u'\n' + indent + u'child_window(' + u', '.join(criteria_texts) + u')'
 
                 if six.PY3:

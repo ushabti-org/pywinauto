@@ -18,7 +18,7 @@
 
 import sys
 import argparse
-from pywinauto.application import Application
+from releases.pywinauto069.pywinauto.application import Application
 
 
 def inspect(window_title, output_file, engine, max_depth, max_width):
@@ -27,7 +27,7 @@ def inspect(window_title, output_file, engine, max_depth, max_width):
     
     try:
         # Connect to the application using the window title
-        app.connect(name=window_title)
+        app.connect(title=window_title)
         
         print("==" * 20)
         print("Connected to application with window title: '{}'".format(window_title))
@@ -35,15 +35,25 @@ def inspect(window_title, output_file, engine, max_depth, max_width):
         print("Process ID: {}".format(app.process))
         print("==" * 20)
         windows = app.windows()
-        print("Please select the window you want to inspect:")
-        for i, window in enumerate(windows):
-            print(f"{i}: {window.window_text()}")
-        selected_window_index = int(input("Enter the number of the window you want to inspect: "))
-        selected_window = windows[selected_window_index]
-        print("Selected window: '{}'".format(selected_window.window_text()))
-        print("==" * 20)
-        window = app.window(name=selected_window.window_text(), found_index=0)
-        window.dump_tree(depth=max_depth, max_width=max_width, filename=output_file)
+        selected_window = None
+
+        if len(windows) == 1:
+            selected_window = windows[0]
+        else:
+            print("Please select the window you want to inspect:")
+            for i, window in enumerate(windows):
+                print(f"{i}: {window.window_text()}")
+            selected_window_index = int(input("Enter the number of the window you want to inspect: "))
+            selected_window = windows[selected_window_index]
+            print("Selected window: '{}'".format(selected_window.window_text()))
+            print("==" * 20)
+        
+        if selected_window is None:
+            print("No window selected")
+            sys.exit(1)
+        
+        window = app.window(title=selected_window.window_text(), found_index=0)
+        window.dump_tree(depth=max_depth, filename=output_file)
         print("==" * 20)
         
     except Exception as e:
