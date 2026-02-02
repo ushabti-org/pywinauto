@@ -32,7 +32,15 @@ def get_element_info(element) -> str:
     control_type = info.control_type if info.control_type else "unset_control_type"
     control_id = info.automation_id if info.automation_id else info.control_id
     title = info.name if info.name else "unset_title"
-    return f"{class_name} , {control_type} , {control_id} , ({num_children}) , {title}"
+
+    # Make each field a fixed width for aligned columns
+    return (
+        f"{class_name:<35} "     # Left-align, width 35
+        f"{control_type:<20} "   # Left-align, width 20
+        f"{str(control_id):<15} "    # Left-align, width 15
+        f"({num_children:^3}) "  # Centered inside parens, width 3
+        f"{title}"
+    )
 
 
 def print_current_path(path) -> None:
