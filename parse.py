@@ -23,24 +23,27 @@ APPLICATION_TITLE = re.compile(r".*SOMETHING_TO_MATCH_ON_THE_WINDOW_TITLE.*")
 APPLICATION_ENGINE = "win32"
 
 
-def get_element_info(element) -> str:
+def get_element_info(element, index: int | None = None) -> str:
     if not hasattr(element, "element_info"):
         return str(element)
     info = element.element_info
     num_children = len(element.children())
-    class_name = info.class_name if info.class_name else "unset_class_name"
-    control_type = info.control_type if info.control_type else "unset_control_type"
+    class_name = info.class_name if info.class_name else ""
+    control_type = info.control_type if info.control_type else ""
     control_id = info.automation_id if info.automation_id else info.control_id
-    title = info.name if info.name else "unset_title"
+    title = info.name if info.name else ""
+    index_str = f"index: {index}" if index is not None else ""
 
     # Make each field a fixed width for aligned columns
-    return (
-        f"{class_name:<35} "     # Left-align, width 35
-        f"{control_type:<20} "   # Left-align, width 20
-        f"{str(control_id):<15} "    # Left-align, width 15
-        f"({num_children:^3}) "  # Centered inside parens, width 3
-        f"{title}"
-    )
+    return f"""
+        {index_str}
+        title: {title}
+        class_name: {class_name}
+        control_type: {control_type}
+        control_id: {control_id}
+        children: {num_children}
+
+    """
 
 
 def print_current_path(path) -> None:
@@ -78,7 +81,9 @@ def parse():
             print_current_path(selected_children)
             print("Please select the element you want to parse:")
             for i, child in enumerate(options):
-                print(f"{i}:    {get_element_info(child)}")
+                print(get_element_info(child, i))
+            
+            print("==" * 20)
             print("'B':    Back")
             print("'E':    Exit")
 
