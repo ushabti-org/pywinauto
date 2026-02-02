@@ -23,17 +23,30 @@ APPLICATION_TITLE = re.compile(r".*SOMETHING_TO_MATCH_ON_THE_WINDOW_TITLE.*")
 APPLICATION_ENGINE = "win32"
 
 
-def print_current_path(path):
-    """Prints the currently selected path"""
+def get_element_info(element) -> str:
+    if not hasattr(element, "element_info"):
+        return str(element)
+    info = element.element_info
+    num_children = len(element.children())
+    class_name = info.class_name if info.class_name else "unset_class_name"
+    control_type = info.control_type if info.control_type else "unset_control_type"
+    control_id = info.automation_id if info.automation_id else info.control_id
+    title = info.name if info.name else "unset_title"
+    return f"{class_name} , {control_type} , {control_id} , ({num_children}) , {title}"
+
+
+def print_current_path(path) -> None:
     if len(path) == 0:
         return
-    
-    msg = "Current Path: "
+    msg = "CURRENT PATH"
+    print("==" * 20)
+    spaces = 0
     for c in path:
-        msg = f"{msg} -> {c}"
-    
-    print(msg)
-    print("\n")
+        spaces_str = " " * spaces
+        info_str = get_element_info(c)
+        print(f"{spaces_str}{info_str}")
+        spaces = spaces + 2
+    print("==" * 20)
 
 
 def parse():
@@ -57,13 +70,11 @@ def parse():
             print_current_path(selected_children)
             print("Please select the element you want to parse:")
             for i, child in enumerate(options):
-                info = child.element_info if hasattr(child, "element_info") else child
-                print(f"{i}: {info}")
-            
-            print("'B': to go back up a level")
-            print("'E': to exit")
+                print(f"{i}:    {get_element_info(child)}")
+            print("'B':    Back")
+            print("'E':    Exit")
 
-            selection = input("Select an option: ")
+            selection = input("> ")
             if selection == "E":
                 break
             elif selection == "B" and len(selected_children) > 0:
