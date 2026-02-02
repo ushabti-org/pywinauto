@@ -23,27 +23,19 @@ APPLICATION_TITLE = re.compile(r".*SOMETHING_TO_MATCH_ON_THE_WINDOW_TITLE.*")
 APPLICATION_ENGINE = "win32"
 
 
-def get_element_info(element, index: int | None = None) -> str:
+def get_element_info(element, index: int | None = None, limit: int = 20) -> str:
     if not hasattr(element, "element_info"):
         return str(element)
     info = element.element_info
     num_children = len(element.children())
-    class_name = info.class_name if info.class_name else ""
-    control_type = info.control_type if info.control_type else ""
-    control_id = info.automation_id if info.automation_id else info.control_id
-    title = info.name if info.name else ""
-    index_str = f"index: {index}" if index is not None else ""
+    class_name = info.class_name[:limit] if info.class_name else "unset_class_name"
+    control_type = info.control_type[:limit] if info.control_type else "unset_control_type"
+    control_id = info.automation_id[:limit] if info.automation_id else info.control_id
+    name = info.name[:limit] if info.name else "unset_name"
+    index_str = f"{index}:" if index is not None else ""
 
     # Make each field a fixed width for aligned columns
-    return f"""
-        {index_str}
-        title: {title}
-        class_name: {class_name}
-        control_type: {control_type}
-        control_id: {control_id}
-        children: {num_children}
-
-    """
+    return f"""{index_str:<4} {class_name:<{limit}} {control_type:<{limit}} {control_id:<{limit}} {name:<{limit}} ({num_children})"""
 
 
 def print_current_path(path) -> None:
