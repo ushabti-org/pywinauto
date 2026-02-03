@@ -21,21 +21,29 @@ from releases.pywinauto069.pywinauto.application import Application
 ## Update this regex to match the window title of the application you want to parse
 APPLICATION_TITLE = re.compile(r".*SOMETHING_TO_MATCH_ON_THE_WINDOW_TITLE.*")
 APPLICATION_ENGINE = "win32"
+STR_LIMIT = 20
 
 
-def get_element_info(element, index: int | None = None, limit: int = 20) -> str:
+def shorthand(value: str) -> str:
+    if value is None:
+        return "unset"
+    if len(value) <= STR_LIMIT:
+        return value
+    return value[:STR_LIMIT] + "..."
+
+
+def get_element_info(element, index: int | None = None) -> str:
     if not hasattr(element, "element_info"):
         return str(element)
     info = element.element_info
     num_children = len(element.children())
-    class_name = info.class_name[:limit] if info.class_name else "unset_class_name"
-    control_type = info.control_type[:limit] if info.control_type else "unset_control_type"
-    control_id = info.automation_id[:limit] if info.automation_id else info.control_id
-    name = info.name[:limit] if info.name else "unset_name"
+    class_name = shorthand(info.class_name)
+    control_type = shorthand(info.control_type)
+    control_id = shorthand(info.automation_id)
+    name = shorthand(info.name)
     index_str = f"{index}:" if index is not None else ""
 
-    # Make each field a fixed width for aligned columns
-    return f"""{index_str:<4} {class_name:<{limit}} {control_type:<{limit}} {control_id:<{limit}} {name:<{limit}} ({num_children})"""
+    return f"""{index_str:<4} {class_name:<{STR_LIMIT}} {control_type:<{STR_LIMIT}} {control_id:<{STR_LIMIT}} {name:<{STR_LIMIT}} ({num_children})"""
 
 
 def print_current_path(path) -> None:
@@ -80,9 +88,9 @@ def parse():
             print("'E':    Exit")
 
             selection = input("> ")
-            if selection == "E":
+            if selection.upper() == "E":
                 break
-            elif selection == "B" and len(selected_children) > 0:
+            elif selection.upper() == "B" and len(selected_children) > 0:
                 selected_children = selected_children[:-1]
                 if len(selected_children) > 0:
                     options = selected_children[-1].children()
@@ -93,6 +101,7 @@ def parse():
                 selected_children.append(options[selected_index])
                 options = options[selected_index].children()
             print("==" * 20)
+            print("\n\n")
 
     except Exception as e:
         print(f"Error: Failed to connect to application: {e}")
