@@ -25,11 +25,11 @@ STR_LIMIT = 20
 
 
 def shorthand(value: str) -> str:
-    if value is None:
+    if not value:
         return "unset"
     if len(value) <= STR_LIMIT:
         return value
-    return value[:STR_LIMIT] + "..."
+    return value[:STR_LIMIT-3] + "..."
 
 
 def get_element_info(element, index: int | None = None) -> str:
