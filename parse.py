@@ -37,10 +37,10 @@ def get_element_info(element, index: int | None = None) -> str:
         return str(element)
     info = element.element_info
     num_children = len(element.children())
-    class_name = shorthand(info.class_name)
-    control_type = shorthand(info.control_type)
-    control_id = shorthand(info.automation_id)
-    name = shorthand(info.name)
+    class_name = shorthand(str(info.class_name))
+    control_type = shorthand(str(info.control_type))
+    control_id = shorthand(str(info.control_id))
+    name = shorthand(str(info.name))
     index_str = f"{index}:" if index is not None else ""
 
     return f"""{index_str:<4} {class_name:<{STR_LIMIT}} {control_type:<{STR_LIMIT}} {control_id:<{STR_LIMIT}} {name:<{STR_LIMIT}} ({num_children})"""
@@ -49,13 +49,12 @@ def get_element_info(element, index: int | None = None) -> str:
 def print_current_path(path) -> None:
     if len(path) == 0:
         return
-    msg = "CURRENT PATH"
     print("==" * 20)
+    print("CURRENT PATH")
     spaces = 0
     for c in path:
         spaces_str = " " * spaces
-        info_str = get_element_info(c)
-        print(f"{spaces_str}{info_str}")
+        print(f"{spaces_str}{c}")
         spaces = spaces + 2
     print("==" * 20)
 
@@ -79,7 +78,7 @@ def parse():
 
         while True:
             print_current_path(selected_children)
-            print("Please select the element you want to parse:")
+            print("Please select the element you want to parse:\n")
             for i, child in enumerate(options):
                 print(get_element_info(child, i))
             
