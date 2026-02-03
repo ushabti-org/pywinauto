@@ -27,6 +27,7 @@ STR_LIMIT = 20
 def shorthand(value: str) -> str:
     if not value:
         return "unset"
+    value = value.replace("\n", "").replace("\r", "")
     if len(value) <= STR_LIMIT:
         return value
     return value[:STR_LIMIT-3] + "..."
