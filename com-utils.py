@@ -1,3 +1,4 @@
+import json
 import time
 from releases.pywinauto069.pywinauto.uia_defines import IUIA
 from releases.pywinauto069.pywinauto.controls.hwndwrapper import HwndWrapper
@@ -72,16 +73,18 @@ def enter_data(entry: dict, tab_count: int = 50):
             el = HwndWrapper(element.CurrentNativeWindowHandle)
             key = str(el.element_info.control_id)    
             if key in entry:
-                value = entry[key]
+                value = entry[key]["value"]
                 el.type_keys(value)
+                entry[key]["success"] = True
                 is_success = True
             else:
                 parent = el.parent()
                 if parent is not None:
                     key = str(parent.element_info.control_id)
                     if key in entry:
-                        value = entry[key]
+                        value = entry[key]["value"]
                         parent.type_keys(value)
+                        entry[key]["success"] = True
                         is_success = True    
             if len(entry) == 0:
                 break
@@ -92,58 +95,60 @@ def enter_data(entry: dict, tab_count: int = 50):
             maybe_close_warning_dialog(app)
         finally:
             if not is_error:
-                msg += f"key: {key} (success)" if is_success else f"key: {key} (failed)"
+                msg += f"key: {key} (success)" if is_success else f"key: {key} (no-match)"
             print(msg)
 
 def main():
     ## Sandbox for testing
-    enter_data({
-        "20000": "S",
-        "20001": "123456789",
-        "20002": "ACME INC",
-        "20005": "1",
-        "20006": "S",
-        "20011": "X",
-        "20012": "X",
-        "20013": "X",
-        "20014": "2",
-        "20017": "X",
-        "20018": "123ABC",
-        "20019": "99956452",
-        "20020": "99956453",
-        "20021": "99956454",
-        "20022": "99956455",
-        "20023": "123 Main St.",
-        "20024": "Houston",
-        "20025": "TX",
-        "20026": "77002",
-        "20027": "375000",
-        "20028": "55000",
-        "20029": "75000",
-        "20030": "64000",
-        "20031": "100000",
-        "20033": "579",
-        "20034": "11000",
-        "20035": "12000",
-        "20036": "13000",
-        "20037": "67 Long-Bridge Ave.",
-        "20038": "New York",
-        "20039": "NY",
-        "20040": "10007",
-        "20044": "14000",
-        "20045": "15000",
-        "20046": "X",
-        "20047": "X",
-        "20048": "X",
-        "20049": "1231",
-        "20050": "104",
-        "20052": "TX",
-        "20055": "15000",
-        "20056": "16000",
-        "20057": "17000",
-        "20058": "AS",
-        "20059": "19000"
-    }, 70)
+    data = {
+        "20000": {"value": "S", "success": False},
+        "20001": {"value": "123456789", "success": False},
+        "20002": {"value": "ACME INC", "success": False},
+        "20005": {"value": "1", "success": False},
+        "20006": {"value": "S", "success": False},
+        "20011": {"value": "X", "success": False},
+        "20012": {"value": "X", "success": False},
+        "20013": {"value": "X", "success": False},
+        "20014": {"value": "2", "success": False},
+        "20017": {"value": "X", "success": False},
+        "20018": {"value": "123ABC", "success": False},
+        "20019": {"value": "99956452", "success": False},
+        "20020": {"value": "99956453", "success": False},
+        "20021": {"value": "99956454", "success": False},
+        "20022": {"value": "99956455", "success": False},
+        "20023": {"value": "123 Main St.", "success": False},
+        "20024": {"value": "Houston", "success": False},
+        "20025": {"value": "TX", "success": False},
+        "20026": {"value": "77002", "success": False},
+        "20027": {"value": "375000", "success": False},
+        "20028": {"value": "55000", "success": False},
+        "20029": {"value": "75000", "success": False},
+        "20030": {"value": "64000", "success": False},
+        "20031": {"value": "100000", "success": False},
+        "20033": {"value": "579", "success": False},
+        "20034": {"value": "11000", "success": False},
+        "20035": {"value": "12000", "success": False},
+        "20036": {"value": "13000", "success": False},
+        "20037": {"value": "67 Long-Bridge Ave.", "success": False},
+        "20038": {"value": "New York", "success": False},
+        "20039": {"value": "NY", "success": False},
+        "20040": {"value": "10007", "success": False},
+        "20044": {"value": "14000", "success": False},
+        "20045": {"value": "15000", "success": False},
+        "20046": {"value": "X", "success": False},
+        "20047": {"value": "X", "success": False},
+        "20048": {"value": "X", "success": False},
+        "20049": {"value": "1231", "success": False},
+        "20050": {"value": "104", "success": False},
+        "20052": {"value": "TX", "success": False},
+        "20055": {"value": "15000", "success": False},
+        "20056": {"value": "16000", "success": False},
+        "20057": {"value": "17000", "success": False},
+        "20058": {"value": "AS", "success": False},
+        "20059": {"value": "19000", "success": False}
+    }
+    enter_data(data, 100)
+    print(json.dumps(data, indent=2))
 
 if __name__ == "__main__":
     main()
