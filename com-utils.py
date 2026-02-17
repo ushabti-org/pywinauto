@@ -40,9 +40,8 @@ def print_descendants(element):
         except Exception:
             pass
 
-def get_main_window() -> HwndWrapper:
-    window = find_element_by_class_name("CSIUTW2025")
-    p1 = find_element_by_auto_id("59648", window)
+def get_main_window(app) -> HwndWrapper:
+    p1 = find_element_by_auto_id("59648", app)
     p2 = find_element_by_auto_id("59664", p1)
     p2.SetFocus()
     return HwndWrapper(p2.CurrentNativeWindowHandle)
@@ -52,8 +51,8 @@ def tab_into_next_field(w: HwndWrapper):
     w.type_keys("{TAB}")
     time.sleep(0.3)
 
-def maybe_close_warning_dialog(w: HwndWrapper):
-    dialog = find_element_by_auto_id("OverruleWarning", w)
+def maybe_close_warning_dialog(app):
+    dialog = find_element_by_auto_id("OverruleWarning", app)
     if dialog:
         el = HwndWrapper(dialog.CurrentNativeWindowHandle)
         el.close()
@@ -62,8 +61,9 @@ def maybe_close_warning_dialog(w: HwndWrapper):
 def enter_data(entry: dict, tab_count: int = 50):
     def on_successful_entry(key):
         del entry[key]
-
-    window = get_main_window()
+    
+    app = find_element_by_class_name("CSIUTW2025")
+    window = get_main_window(app)
 
     for i in range(tab_count):
         try:
@@ -93,7 +93,7 @@ def enter_data(entry: dict, tab_count: int = 50):
             tab_into_next_field(window)
         except Exception as e:
             msg += f"error: {e}"
-            maybe_close_warning_dialog(window)
+            maybe_close_warning_dialog(app)
         finally:
             print(msg)
             
