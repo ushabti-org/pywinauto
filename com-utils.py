@@ -52,11 +52,17 @@ def tab_into_next_field(w: HwndWrapper):
     w.type_keys("{TAB}")
     time.sleep(0.3)
 
+def maybe_close_warning_dialog(w: HwndWrapper):
+    dialog = find_element_by_auto_id("OverruleWarning", w)
+    if dialog:
+        el = HwndWrapper(dialog.CurrentNativeWindowHandle)
+        el.close()
+        time.sleep(0.5)
 
 def enter_data(entry: dict, tab_count: int = 50):
     def on_successful_entry(key):
         del entry[key]
-    
+
     window = get_main_window()
 
     for i in range(tab_count):
@@ -87,6 +93,7 @@ def enter_data(entry: dict, tab_count: int = 50):
             tab_into_next_field(window)
         except Exception as e:
             msg += f"error: {e}"
+            maybe_close_warning_dialog(window)
         finally:
             print(msg)
             
