@@ -56,19 +56,21 @@ def tab_into_next_field(w: HwndWrapper):
 def enter_data(entry: dict, tab_count: int = 50):
     def on_successful_entry(key):
         del entry[key]
-        print(f"successfully entered: {key}, remaining: {len(entry)}")
     
     window = get_main_window()
 
     for i in range(tab_count):
         try:
+            msg = f"{i}: "
             element = uia.get_focused_element()
             el = HwndWrapper(element.CurrentNativeWindowHandle)
             key = str(el.element_info.control_id)
+            
             if key in entry:
                 value = entry[key]
                 el.type_keys(value)
                 on_successful_entry(key)
+                msg += f"key: {key} (success)"
             else:
                 parent = el.parent()
                 if parent is not None:
@@ -77,13 +79,17 @@ def enter_data(entry: dict, tab_count: int = 50):
                         value = entry[key]
                         parent.type_keys(value)
                         on_successful_entry(key)
+                        msg += f"key: {key} (success)"
+                    else:
+                        msg += f"key: {key} (not found)"
             if len(entry) == 0:
-                print("all entries have been entered - stopping")
                 break
             tab_into_next_field(window)
-
         except Exception as e:
-            print(f"ran into an error for field: {key} value: {value} error: {e}")
+            msg += f"error: {e}"
+        finally:
+            print(msg)
+            
 
 
 def main():
