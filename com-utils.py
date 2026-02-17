@@ -59,15 +59,14 @@ def maybe_close_warning_dialog(app):
         time.sleep(0.5)
 
 def enter_data(entry: dict, tab_count: int = 50):
-    def on_successful_entry(key):
-        del entry[key]
-    
     app = find_element_by_class_name("CSIUTW2025")
     window = get_main_window(app)
 
     for i in range(tab_count):
+        is_success = False
+        is_error = False
+        msg = f"{i}: "
         try:
-            msg = f"{i}: "
             element = uia.get_focused_element()
             el = HwndWrapper(element.CurrentNativeWindowHandle)
             key = str(el.element_info.control_id)
@@ -75,8 +74,7 @@ def enter_data(entry: dict, tab_count: int = 50):
             if key in entry:
                 value = entry[key]
                 el.type_keys(value)
-                on_successful_entry(key)
-                msg += f"key: {key} (success)"
+                is_success = True
             else:
                 parent = el.parent()
                 if parent is not None:
@@ -84,20 +82,18 @@ def enter_data(entry: dict, tab_count: int = 50):
                     if key in entry:
                         value = entry[key]
                         parent.type_keys(value)
-                        on_successful_entry(key)
-                        msg += f"key: {key} (success)"
-                    else:
-                        msg += f"key: {key} (not found)"
+                        is_success = True    
             if len(entry) == 0:
                 break
             tab_into_next_field(window)
         except Exception as e:
             msg += f"error: {e}"
+            is_error = True
             maybe_close_warning_dialog(app)
         finally:
+            if not is_error:
+                msg += f" (success)" if is_success else f" (failed)"
             print(msg)
-            
-
 
 def main():
     ## Sandbox for testing
