@@ -59,6 +59,9 @@ def maybe_close_warning_dialog(app):
         el.close()
         time.sleep(0.5)
 
+def get_input_value(value: str) -> str:
+    return value.replace(" ", "{SPACE}")
+
 def enter_data(entry: dict, tab_count: int = 50):
     app = find_element_by_class_name("CSIUTW2025")
     window = get_main_window(app)
@@ -74,7 +77,7 @@ def enter_data(entry: dict, tab_count: int = 50):
             key = str(el.element_info.control_id)    
             if key in entry:
                 value = entry[key]["value"]
-                el.type_keys(value)
+                el.type_keys(get_input_value(value))
                 entry[key]["success"] = True
                 is_success = True
             else:
@@ -83,7 +86,7 @@ def enter_data(entry: dict, tab_count: int = 50):
                     key = str(parent.element_info.control_id)
                     if key in entry:
                         value = entry[key]["value"]
-                        parent.type_keys(value)
+                        parent.type_keys(get_input_value(value))
                         entry[key]["success"] = True
                         is_success = True    
             if len(entry) == 0:
