@@ -66,11 +66,11 @@ def enter_data(entry: dict, tab_count: int = 50):
         is_success = False
         is_error = False
         msg = f"{i}: "
+        key = "<no-id>"
         try:
             element = uia.get_focused_element()
             el = HwndWrapper(element.CurrentNativeWindowHandle)
-            key = str(el.element_info.control_id)
-            
+            key = str(el.element_info.control_id)    
             if key in entry:
                 value = entry[key]
                 el.type_keys(value)
@@ -87,12 +87,12 @@ def enter_data(entry: dict, tab_count: int = 50):
                 break
             tab_into_next_field(window)
         except Exception as e:
-            msg += f"error: {e}"
+            msg += f"key: {key} error: {e}"
             is_error = True
             maybe_close_warning_dialog(app)
         finally:
             if not is_error:
-                msg += f" (success)" if is_success else f" (failed)"
+                msg += f"key: {key} (success)" if is_success else f"key: {key} (failed)"
             print(msg)
 
 def main():
