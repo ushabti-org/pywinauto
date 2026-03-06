@@ -15,7 +15,8 @@
 
 import re
 import sys
-from releases.pywinauto069.pywinauto.application import Application
+from releases.pywinauto069.pywinauto.application import Application, WindowSpecification
+from typing import List
 
 
 ## Update this regex to match the window title of the application you want to parse
@@ -33,7 +34,7 @@ def shorthand(value: str) -> str:
     return value[:STR_LIMIT-3] + "..."
 
 
-def get_element_info(element, index: int | None = None) -> str:
+def get_element_info(element: WindowSpecification, index: int | None = None) -> str:
     if not hasattr(element, "element_info"):
         return str(element)
     info = element.element_info
@@ -62,7 +63,7 @@ def print_current_path(path) -> None:
 
 def parse():
     """Connect to a running application by window title and print control identifiers"""
-    app = Application(backend=APPLICATION_ENGINE)
+    app: Application = Application(backend=APPLICATION_ENGINE)
     
     try:
         # Connect to the application using the window title
@@ -73,9 +74,9 @@ def parse():
         print("Engine: '{}'".format(APPLICATION_ENGINE))
         print("Process ID: {}".format(app.process))
         print("==" * 20)
-        windows = app.windows()
+        windows: List[WindowSpecification] = app.windows()
         selected_children = []
-        options = windows
+        options: List[WindowSpecification] = windows
 
         while True:
             print_current_path(selected_children)
